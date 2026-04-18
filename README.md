@@ -25,14 +25,13 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-// --- DATA AWAL PRODUK ---
+// --- DATA AWAL ---
 const INITIAL_PRODUCTS = [
   { id: 1, name: "Midnight Oud", category: "Pria", price: 1250000, discountPrice: 1100000, rating: 4.9, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=400", description: "Wangi kayu yang dalam dan misterius.", brand: "DONIX Luxury" },
   { id: 2, name: "Rose Silk", category: "Wanita", price: 950000, discountPrice: null, rating: 4.8, image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=400", description: "Kelembutan kelopak mawar pagi hari.", brand: "DONIX Essence" },
   { id: 3, name: "Ocean Breeze", category: "Unisex", price: 780000, discountPrice: 650000, rating: 4.7, image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=400", description: "Kesegaran pantai tropis yang tak terbatas.", brand: "DONIX Fresh" },
 ];
 
-// --- DATA SLIDESHOW PROMO ---
 const PROMO_SLIDES = [
   {
     image: "https://images.unsplash.com/photo-1547881023-da79069695be?auto=format&fit=crop&q=80&w=1600",
@@ -162,18 +161,15 @@ export default function App() {
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState("");
 
-  // Slideshow Effect (Auto-play)
+  // Slideshow Effect
   useEffect(() => {
     if (currentPage === 'home') {
       const timer = setInterval(() => {
         setCurrentSlide(prev => (prev + 1) % PROMO_SLIDES.length);
-      }, 6000);
+      }, 5000);
       return () => clearInterval(timer);
     }
   }, [currentPage]);
-
-  const nextSlide = () => setCurrentSlide(prev => (prev + 1) % PROMO_SLIDES.length);
-  const prevSlide = () => setCurrentSlide(prev => (prev === 0 ? PROMO_SLIDES.length - 1 : prev - 1));
 
   // Cart Handlers
   const addToCart = (product) => {
@@ -273,64 +269,36 @@ export default function App() {
         activePage={currentPage}
       />
 
-      {/* --- PAGE: HOME (DENGAN SLIDESHOW VISUAL) --- */}
+      {/* --- PAGE: HOME (WITH SLIDESHOW) --- */}
       {currentPage === 'home' && (
         <main className="animate-fadeIn">
-          <section className="relative h-screen overflow-hidden bg-black">
+          <section className="relative h-screen overflow-hidden">
             {PROMO_SLIDES.map((slide, index) => (
               <div 
                 key={index}
-                className={`absolute inset-0 transition-all duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-110 z-0'}`}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
               >
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70 z-10"></div>
-                <img src={slide.image} className={`w-full h-full object-cover ${currentSlide === index ? 'animate-slowZoom' : ''}`} alt={slide.title} />
+                <div className="absolute inset-0 bg-black/50 z-10"></div>
+                <img src={slide.image} className="w-full h-full object-cover animate-slowZoom" alt="Slideshow" />
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center text-white px-4">
-                  <span className="text-[#C5A059] text-[10px] md:text-xs font-bold uppercase tracking-[0.5em] mb-4 bg-white/10 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/20">
-                    {slide.tag}
-                  </span>
-                  <h2 className="text-5xl md:text-8xl font-serif font-bold mb-6 tracking-tighter drop-shadow-2xl">
-                    {slide.title}
-                  </h2>
-                  <p className="text-lg md:text-xl text-gray-200 mb-12 font-light italic tracking-widest max-w-2xl">
-                    {slide.subtitle}
-                  </p>
-                  <button onClick={() => setCurrentPage('shop')} className="bg-[#C5A059] text-white px-12 py-5 rounded-full font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3 group tracking-widest text-[10px] uppercase shadow-xl hover:shadow-[#C5A059]/40">
-                    Koleksi Lengkap <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                  <span className="text-[#C5A059] text-xs font-bold uppercase tracking-[0.5em] mb-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">{slide.tag}</span>
+                  <h2 className="text-5xl md:text-8xl font-serif font-bold mb-6 tracking-tighter">{slide.title}</h2>
+                  <p className="text-lg md:text-xl text-gray-300 mb-10 font-light italic tracking-widest">{slide.subtitle}</p>
+                  <button onClick={() => setCurrentPage('shop')} className="bg-[#C5A059] text-white px-12 py-5 rounded-full font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 group tracking-widest text-[10px] uppercase">
+                    Mulai Belanja <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
                   </button>
                 </div>
               </div>
             ))}
-
-            {/* Slide Navigation Buttons */}
-            <button onClick={prevSlide} className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all hidden md:block">
-              <ChevronLeft size={30} />
-            </button>
-            <button onClick={nextSlide} className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-all hidden md:block">
-              <ChevronRight size={30} />
-            </button>
-
-            {/* Slideshow Progress Dots */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex gap-4">
+            {/* Slideshow Controls */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-3">
               {PROMO_SLIDES.map((_, idx) => (
                 <button 
                   key={idx} 
                   onClick={() => setCurrentSlide(idx)}
-                  className={`group relative h-1.5 transition-all duration-500 rounded-full ${currentSlide === idx ? 'w-16 bg-[#C5A059]' : 'w-4 bg-white/40 hover:bg-white/60'}`}
-                >
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-[8px] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap tracking-widest">0{idx + 1}</span>
-                </button>
+                  className={`w-12 h-1 rounded-full transition-all ${currentSlide === idx ? 'bg-[#C5A059]' : 'bg-white/30 hover:bg-white/50'}`}
+                />
               ))}
-            </div>
-          </section>
-
-          {/* Intro Section */}
-          <section className="py-24 px-4 bg-white text-center">
-            <div className="max-w-3xl mx-auto">
-              <div className="w-12 h-1 bg-[#C5A059] mx-auto mb-10"></div>
-              <h3 className="text-3xl md:text-5xl font-serif font-bold mb-8 italic">The Essence of Modern Luxury</h3>
-              <p className="text-gray-500 leading-loose font-light">
-                DONIX Parfume menghadirkan perpaduan antara bahan baku kualitas tertinggi dengan keahlian artistik parfum modern. Setiap botol adalah cerita tentang kemewahan, karakter, dan daya tarik yang tak lekang oleh waktu.
-              </p>
             </div>
           </section>
         </main>
@@ -468,7 +436,7 @@ export default function App() {
         </main>
       )}
 
-      {/* --- PRODUCT MODAL --- */}
+      {/* --- PRODUCT MODAL (EDIT/ADD) --- */}
       {showProductModal && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowProductModal(false)}></div>
@@ -478,6 +446,7 @@ export default function App() {
               <button onClick={() => setShowProductModal(false)} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><X size={24}/></button>
             </div>
             <form onSubmit={handleSaveProduct} className="p-8 space-y-6">
+              {/* Image Preview & Upload */}
               <div className="flex flex-col md:flex-row gap-8 items-center border-b pb-8 border-gray-100">
                 <div className="w-32 h-44 bg-gray-50 rounded-2xl overflow-hidden border border-dashed border-gray-200 relative group shrink-0">
                   {previewImage ? (
@@ -488,25 +457,31 @@ export default function App() {
                       <span className="text-[8px] font-bold uppercase mt-2">No Photo</span>
                     </div>
                   )}
-                  <button type="button" onClick={() => fileInputRef.current.click()} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[9px] font-bold uppercase tracking-widest">Ganti Foto</button>
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current.click()}
+                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[9px] font-bold uppercase tracking-widest"
+                  >
+                    Ganti Foto
+                  </button>
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                 </div>
                 <div className="flex-grow w-full space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold mb-1 uppercase text-gray-400 tracking-widest">URL Gambar</label>
+                    <label className="block text-[10px] font-bold mb-1 uppercase text-gray-400 tracking-widest">Atau Gunakan URL Gambar</label>
                     <input name="imageUrl" defaultValue={editingProduct?.image} className="w-full border-gray-100 bg-gray-50 p-3 rounded-xl text-xs" placeholder="https://..." onChange={(e) => setPreviewImage(e.target.value)} />
                   </div>
-                  <p className="text-[9px] text-gray-400 italic">Foto dengan rasio 3:4 memberikan hasil paling profesional.</p>
+                  <p className="text-[9px] text-gray-400 italic">Gunakan foto dengan rasio 3:4 untuk hasil terbaik.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Judul Produk</label>
+                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Nama / Judul Produk</label>
                   <input name="name" defaultValue={editingProduct?.name} className="w-full border-gray-200 p-4 rounded-2xl focus:ring-1 focus:ring-[#C5A059] outline-none font-serif font-bold" required />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Deskripsi</label>
+                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Deskripsi Aroma</label>
                   <textarea name="description" defaultValue={editingProduct?.description} className="w-full border-gray-200 p-4 rounded-2xl focus:ring-1 focus:ring-[#C5A059] outline-none h-24 resize-none" required />
                 </div>
                 <div>
@@ -518,12 +493,16 @@ export default function App() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Harga (Rp)</label>
+                  <label className="block text-[10px] font-bold mb-1 uppercase text-gray-500 tracking-widest">Harga Retail (Rp)</label>
                   <input name="price" type="number" defaultValue={editingProduct?.price} className="w-full border-gray-200 p-4 rounded-2xl focus:ring-1 focus:ring-[#C5A059] outline-none" required />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] font-bold mb-1 uppercase text-[#C5A059] tracking-widest">Harga Diskon (Rp) - Opsional</label>
+                  <input name="discountPrice" type="number" defaultValue={editingProduct?.discountPrice} className="w-full border-gray-200 p-4 rounded-2xl focus:ring-1 focus:ring-[#C5A059] outline-none bg-amber-50/20" />
                 </div>
               </div>
               <button type="submit" className="w-full bg-black text-white py-5 rounded-2xl font-bold tracking-[0.2em] hover:bg-[#C5A059] transition-all flex items-center justify-center gap-3 uppercase text-xs">
-                <Save size={18} /> Simpan Produk
+                <Save size={18} /> Simpan Katalog Produk
               </button>
             </form>
           </div>
@@ -536,14 +515,14 @@ export default function App() {
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
           <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-slideLeft">
             <div className="p-8 border-b flex justify-between items-center bg-gray-50">
-              <h2 className="text-xl font-serif font-bold tracking-widest uppercase text-[#C5A059]">Shopping Bag</h2>
+              <h2 className="text-xl font-serif font-bold tracking-widest uppercase">Shopping Bag</h2>
               <button onClick={() => setIsCartOpen(false)} className="hover:rotate-90 transition-transform"><X size={28} /></button>
             </div>
             <div className="flex-grow overflow-y-auto p-8 space-y-8">
               {cart.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-gray-300 gap-4">
                   <ShoppingBag size={80} strokeWidth={1} />
-                  <p className="italic text-sm">Tas belanja Anda masih kosong.</p>
+                  <p className="italic text-sm">Keranjang masih kosong.</p>
                 </div>
               ) : cart.map(item => (
                 <div key={item.id} className="flex gap-6 items-center group">
@@ -564,12 +543,17 @@ export default function App() {
             {cart.length > 0 && (
               <div className="p-8 border-t bg-gray-50 space-y-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-400 uppercase text-[10px] tracking-widest font-bold">Total Estimasi</span>
+                  <span className="text-gray-400 uppercase text-[10px] tracking-widest font-bold">Total Belanja</span>
                   <span className="text-2xl font-serif font-bold">{formatRupiah(cartTotal)}</span>
                 </div>
-                <button onClick={() => handleCheckout('wa')} className="w-full bg-[#25D366] text-white py-5 rounded-2xl font-bold tracking-widest hover:bg-[#128C7E] transition-all transform active:scale-95 shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 uppercase text-[10px]">
-                  Konfirmasi via WhatsApp
-                </button>
+                <div className="grid grid-cols-2 gap-3">
+                  <button onClick={() => handleCheckout('wa')} className="col-span-2 bg-[#25D366] text-white py-5 rounded-2xl font-bold tracking-widest hover:bg-[#128C7E] transition-all transform active:scale-95 shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 uppercase text-[10px]">
+                    WhatsApp Checkout
+                  </button>
+                  <button onClick={() => handleCheckout('email')} className="col-span-2 border border-black py-4 rounded-2xl font-bold tracking-widest hover:bg-black hover:text-white transition-all uppercase text-[10px]">
+                    Email Order
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -597,12 +581,12 @@ export default function App() {
 
         @keyframes slowZoom {
           from { transform: scale(1); }
-          to { transform: scale(1.1); }
+          to { transform: scale(1.15); }
         }
         .animate-slowZoom { animation: slowZoom 15s linear infinite alternate; }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #f9f9f9; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 10px; }
       `}</style>
     </div>
@@ -624,33 +608,33 @@ const Footer = () => (
         </div>
       </div>
       <div>
-        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Navigasi</h3>
+        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Koleksi</h3>
         <ul className="space-y-6 text-gray-500 text-[10px] tracking-[0.2em] font-medium uppercase">
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Koleksi Pria</li>
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Koleksi Wanita</li>
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Best Sellers</li>
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Promo Spesial</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Parfum Pria</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Parfum Wanita</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Unisex Collection</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">New Arrivals</li>
         </ul>
       </div>
       <div>
-        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Layanan</h3>
+        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Toko</h3>
         <ul className="space-y-6 text-gray-500 text-[10px] tracking-[0.2em] font-medium uppercase">
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Lacak Pesanan</li>
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Kebijakan Pengembalian</li>
-          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">FAQ</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Kontak Admin</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Pengiriman</li>
+          <li className="hover:text-[#C5A059] cursor-pointer transition-colors">Tentang Kami</li>
         </ul>
       </div>
       <div>
-        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Hubungi Kami</h3>
+        <h3 className="text-[10px] font-bold mb-10 uppercase tracking-[0.4em] text-gray-400">Informasi Kontak</h3>
         <p className="text-gray-500 text-[10px] tracking-widest leading-relaxed uppercase mb-3">WhatsApp: +62 881-0223-62914</p>
         <p className="text-gray-500 text-[10px] tracking-widest uppercase">Email: dalfarizzi93@gmail.com</p>
         <div className="mt-10 p-5 border border-[#C5A059]/30 rounded-2xl bg-[#C5A059]/5">
-          <p className="text-[9px] text-[#C5A059] italic font-medium leading-relaxed uppercase tracking-wider">Tersedia pengiriman ke seluruh Indonesia dengan standar keamanan tinggi.</p>
+          <p className="text-[9px] text-[#C5A059] italic font-medium leading-relaxed uppercase tracking-wider">Tersedia pengiriman premium ke seluruh wilayah Indonesia.</p>
         </div>
       </div>
     </div>
     <div className="text-center mt-12 text-gray-600 text-[9px] uppercase tracking-[0.5em] font-medium">
-      © {new Date().getFullYear()} DONIX PARFUME — Luxury Standards.
+      © {new Date().getFullYear()} DONIX PARFUME — Luxury Fragrance Standards.
     </div>
   </footer>
 );
